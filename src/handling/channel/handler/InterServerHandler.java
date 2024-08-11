@@ -38,10 +38,10 @@ import handling.world.World;
 import handling.world.exped.MapleExpedition;
 import handling.world.guild.MapleGuild;
 import java.util.List;
-import javafx.util.Pair;
 import server.maps.FieldLimitType;
 import tools.FileoutputUtil;
 import tools.MaplePacketCreator;
+import tools.Pair;
 import tools.data.LittleEndianAccessor;
 import tools.packet.MTSCSPacket;
 
@@ -53,7 +53,7 @@ public class InterServerHandler {
             c.announce(MaplePacketCreator.enableActions());
             return;
         }
-/*        if (World.getPendingCharacterSize() >= 10) {
+        /*        if (World.getPendingCharacterSize() >= 10) {
             chr.dropMessage(1, "The server is busy at the moment. Please try again in a minute or less.");
             c.announce(MaplePacketCreator.enableActions());
             return;
@@ -123,7 +123,7 @@ public class InterServerHandler {
             player = MapleCharacter.loadCharFromDB(playerid, c, true);
             player.getStat().recalcLocalStats(true, player);
         }
-/*        if (transfer == null) { // 第一次登入 角色沒有在PlayerStorage裡面
+        /*        if (transfer == null) { // 第一次登入 角色沒有在PlayerStorage裡面
             for (ChannelServer cs : ChannelServer.getAllInstances()) {
                 if (cs.getPlayerStorage().getPendingCharacter(playerid) != null) {
                     c.getSession().close();
@@ -190,12 +190,12 @@ public class InterServerHandler {
         player.giveSilentDebuff(PlayerBuffStorage.getDiseaseFromStorage(player.getId()));
 
         c.announce(MaplePacketCreator.getCharInfo(player));
-        
+
         c.announce(MTSCSPacket.enableCSUse());
 //        if (player.isGM()) {
 //            SkillFactory.getSkill(5001004).getEffect(1).applyTo(player);
 //        }
-        
+
         c.announce(MaplePacketCreator.temporaryStats_Reset()); // .
         player.getMap().addPlayer(player);
         try {
@@ -285,7 +285,7 @@ public class InterServerHandler {
         c.announce(MaplePacketCreator.pendantSlot(stat != null && stat.getCustomData() != null && Long.parseLong(stat.getCustomData()) > System.currentTimeMillis()));
         stat = player.getQuestNoAdd(MapleQuest.getInstance(GameConstants.QUICK_SLOT));
         c.announce(MaplePacketCreator.quickSlot(stat != null && stat.getCustomData() != null && stat.getCustomData().length() == 8 ? stat.getCustomData() : null));
-        */
+         */
     }
 
     public static final void ChangeChannel(final LittleEndianAccessor slea, final MapleClient c, final MapleCharacter chr) {
@@ -293,7 +293,7 @@ public class InterServerHandler {
             c.announce(MaplePacketCreator.enableActions());
             return;
         }
-/*        if (World.getPendingCharacterSize() >= 10) {
+        /*        if (World.getPendingCharacterSize() >= 10) {
             chr.dropMessage(1, "The server is busy at the moment. Please try again in a less than a minute.");
             c.announce(MaplePacketCreator.enableActions());
             return;

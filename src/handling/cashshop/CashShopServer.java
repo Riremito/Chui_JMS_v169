@@ -23,7 +23,6 @@ package handling.cashshop;
 import constants.ServerConstants;
 import java.net.InetSocketAddress;
 
-import handling.MapleServerHandler;
 import handling.channel.PlayerStorage;
 import handling.netty.ServerConnection;
 import server.MTSStorage;
@@ -34,7 +33,7 @@ public class CashShopServer {
     private static ServerConnection init;
     private static String ip;
     private static InetSocketAddress InetSocketadd;
-    private static final short DEFAULT_PORT = 8487;
+    private static final short DEFAULT_PORT = 8787;
     private static final short port = Short.parseShort(ServerProperties.getProperty("net.sf.odinms.cashshop.net.port", String.valueOf(DEFAULT_PORT)));;
 //    private static short port = 8487/*8600*/;
     private static PlayerStorage players/*, playersMTS*/;

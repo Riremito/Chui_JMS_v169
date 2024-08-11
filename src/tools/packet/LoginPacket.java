@@ -33,7 +33,6 @@ import handling.SendPacketOpcode;
 import handling.login.LoginServer;
 import tools.data.MaplePacketLittleEndianWriter;
 import tools.HexTool;
-import server.Randomizer;
 import tools.MaplePacketCreator;
 
 public class LoginPacket {

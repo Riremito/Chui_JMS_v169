@@ -26,8 +26,8 @@ import java.util.Map;
 
 import java.util.HashSet;
 import handling.netty.ServerConnection;
-import javafx.util.Pair;
 import server.ServerProperties;
+import tools.Pair;
 
 public class LoginServer {
 

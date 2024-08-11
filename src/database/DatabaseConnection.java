@@ -108,7 +108,7 @@ public class DatabaseConnection {
             }
             try {
                 final Connection con = DriverManager.getConnection(
-					"jdbc:mysql://localhost:3306/v169" + "?autoReconnect=true&characterEncoding=utf8",
+					"jdbc:mysql://localhost:3306/chui_jms_v169" + "?autoReconnect=true&characterEncoding=utf8",
 					"root", "");
                 allConnections.add(con);
                 return con;
