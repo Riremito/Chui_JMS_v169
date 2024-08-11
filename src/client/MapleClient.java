@@ -44,10 +44,14 @@ import tools.packet.LoginPacket;
 
 import javax.script.ScriptEngine;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.*;
 import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class MapleClient implements Serializable {
 
@@ -386,6 +390,42 @@ public class MapleClient implements Serializable {
         greason = (byte) 1;
         tempban = null;
         gender = (byte) -1;
+    }
+
+    public int auto_register(String MapleID, String pwd) {
+        String password1_hash = null;
+        String password2_hash = null;
+        try {
+            password1_hash = LoginCryptoLegacy.encodeSHA1(pwd);
+            password2_hash = LoginCryptoLegacy.encodeSHA1("777777");
+        } catch (NoSuchAlgorithmException ex) {
+            Logger.getLogger(MapleClient.class.getName()).log(Level.SEVERE, null, ex);
+            return 0;
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(MapleClient.class.getName()).log(Level.SEVERE, null, ex);
+            return 0;
+        }
+
+        try {
+            Connection con = DatabaseConnection.getConnection();
+            PreparedStatement ps = con.prepareStatement("INSERT INTO accounts (name, password, 2ndpassword, ACash, gender) VALUES (?, ?, ?, ?, ?);", Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, MapleID);
+            ps.setString(2, password1_hash);
+            ps.setString(3, password2_hash);
+            ps.setInt(4, 10000000);
+            // 性別
+            ps.setByte(5, (byte) 0);
+            ps.executeUpdate();
+
+            ResultSet rs = ps.getGeneratedKeys();
+            rs.next();
+            rs.close();
+            ps.close();
+            return 1;
+        } catch (SQLException e) {
+            System.err.println("ERROR" + e);
+        }
+        return 0;
     }
 
     public int login(String login, String pwd, boolean ipMacBanned) {

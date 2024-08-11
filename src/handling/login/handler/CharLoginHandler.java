@@ -66,7 +66,24 @@ public class CharLoginHandler {
         final boolean ipBan = c.hasBannedIP();
         final boolean macBan = c.hasBannedMac();
 
+        // auto register and female mode
+        boolean endwith_ = false;
+        if (login.length() >= 5 && login.endsWith("_")) {
+            login = login.substring(0, login.length() - 1);
+            endwith_ = true;
+        }
         int loginok = c.login(login, pwd, ipBan || macBan);
+        // auto register
+        if (loginok == 5) {
+            if (c.auto_register(login, pwd) == 1) {
+                loginok = c.login(login, pwd, ipBan || macBan);
+            }
+        }
+        // female mode
+        if (endwith_) {
+            c.setGender((byte) 1);
+        }
+
         final Calendar tempbannedTill = c.getTempBanCalendar();
 
         if (loginok == 0 && (ipBan || macBan) && !c.isGm()) {
@@ -203,7 +220,7 @@ public class CharLoginHandler {
         final short luk = 5/*slea.readByte()*/;
 
         if (!LoginInformationProvider.getInstance().isEligibleItem(gender, 0, jobType.type, face) || !LoginInformationProvider.getInstance().isEligibleItem(gender, 1, jobType.type, hair)
-//                || !LoginInformationProvider.getInstance().isEligibleItem(gender, 2, jobType.type, hairColor) || !LoginInformationProvider.getInstance().isEligibleItem(gender, 3, jobType.type, skinColor)
+                //                || !LoginInformationProvider.getInstance().isEligibleItem(gender, 2, jobType.type, hairColor) || !LoginInformationProvider.getInstance().isEligibleItem(gender, 3, jobType.type, skinColor)
                 || !LoginInformationProvider.getInstance().isEligibleItem(gender, 2, jobType.type, top) || !LoginInformationProvider.getInstance().isEligibleItem(gender, 3, jobType.type, bottom)
                 || !LoginInformationProvider.getInstance().isEligibleItem(gender, 4, jobType.type, shoes) || !LoginInformationProvider.getInstance().isEligibleItem(gender, 5, jobType.type, weapon)) {
             return;
@@ -360,7 +377,7 @@ public class CharLoginHandler {
         newchar.getInventory(MapleInventoryType.USE).addItem(new Item(2000004, (byte) 0, (short) 100, (byte) 0));
         c.getPlayer().fakeRelog();
         if (MapleCharacterUtil.canCreateChar(name, c.isGm()) && (!LoginInformationProvider.getInstance().isForbiddenName(name) || c.isGm())) {
-            MapleCharacter.saveNewCharToDB(newchar, jobType, (short)0);
+            MapleCharacter.saveNewCharToDB(newchar, jobType, (short) 0);
             MapleQuest.getInstance(20734).forceComplete(c.getPlayer(), 1101000);
             c.announce(MaplePacketCreator.createUltimate(1));
         } else {
@@ -424,13 +441,13 @@ public class CharLoginHandler {
             }
         }
 //        final String currentpw = c.getSecondPassword();
-        if (!c.isLoggedIn() || loginFailCount(c) /*|| (currentpw != null && (!currentpw.equals("") || haspic)) */|| !c.login_Auth(charId) || ChannelServer.getInstance(c.getChannel()) == null || c.getWorld() != LoginServer.getMainServerId()) { // TODOO: MULTI WORLDS
+        if (!c.isLoggedIn() || loginFailCount(c) /*|| (currentpw != null && (!currentpw.equals("") || haspic)) */ || !c.login_Auth(charId) || ChannelServer.getInstance(c.getChannel()) == null || c.getWorld() != LoginServer.getMainServerId()) { // TODOO: MULTI WORLDS
 //            System.out.println("11111");
             c.getSession().close();
             return;
         }
 
-/*        if (c.getIdleTask() != null) {
+        /*        if (c.getIdleTask() != null) {
             c.getIdleTask().cancel(true);
         }*/
         final String s = c.getSessionIPAddress();
@@ -454,7 +471,7 @@ public class CharLoginHandler {
             return;
         }
         if (c.CheckSecondPassword(password) && password.length() >= 6 && password.length() <= 16) {
-/*            if (c.getIdleTask() != null) {
+            /*            if (c.getIdleTask() != null) {
                 c.getIdleTask().cancel(true);
             }*/
             final String s = c.getSessionIPAddress();
